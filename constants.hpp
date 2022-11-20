@@ -1,0 +1,22 @@
+#ifndef __CONSTANTS_HPP__
+#define __CONSTANTS_HPP__
+
+#define PI 3.14159
+#define TILE_SIZE 32
+
+#define MAP_WIDTH 64
+#define MAP_HEIGHT 32
+
+#define WINDOW_WIDTH MAP_WIDTH*TILE_SIZE
+#define WINDOW_HEIGHT MAP_HEIGHT*TILE_SIZE
+
+#define PLAYER_HEIGHT 16
+#define PLAYER_WIDTH 16
+#define PLAYER_SPEED 4
+#define PLAYER_ROTATION_SPEED PI/64
+#define CURSOR_SIZE 32
+
+#define WALL_CUBE 64
+#define MAX_HEIGHT 640
+
+#endif
