@@ -1,23 +1,48 @@
-SRCS := $(wildcard *.cpp)
-HDRS := $(wildcard *.hpp)
-OBJS := ${SRCS:.cpp=.o}
+SOURCEDIR := src
+HEADERDIR := hdr
+BUILDDIR  := bin
 
-LDFLAGS := -lGL -lGLU -lglfw
-CFLAGS := -Wall
-CXX := g++
+# Create a list of *.cpp sources in DIRS
+SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
+HEADERS = $(wildcard $(HEADERDIR)/*.hpp)
 
-TARGET := main
+# Define objects for all sources
+OBJS := $(subst $(SOURCEDIR),$(BUILDDIR),$(SOURCES:.cpp=.o))
 
-.PHONY := clean
+TARGET := main.out
+VPATH = $(SOURCEDIR)
 
-all:$(TARGET)
+# Define dependencies files for all objects
+DEPS = $(OBJS:.o=.d)
+
+# Name the compiler
+CXX = g++
+
+# set the flags
+CXXFLAGS := -ggdb3 -Wall
+INCLUDES := -I$(HEADERDIR)
+LDFLAGS := -Llib
+LDLIBS := -lGL -lGLU -lglfw
+
+.PHONY: all clean
+
+all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CFLAGS) $^ $(LDFLAGS) -o $@
+	@echo Linking $@
+	$(CXX) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(TARGET)
 
-%.o: %.cpp
-	$(CXX) $(CFLAGS) -c $<
+$(BUILDDIR)/%.o: %.cpp $(HEADERS) | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
+$(BUILDDIR):
+	@mkdir -p $@
+
+# Include dependencies
+-include $(DEPS)
+
+# Remove all objects, dependencies and executable files generated during the build
 clean:
-	rm -rf *.o
+	rm -rf $(BUILDDIR)/*
 	rm $(TARGET)
+	@echo Cleaning done ! 
